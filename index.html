@@ -4,57 +4,13 @@
 <meta charset="UTF-8">
 <title>BrightSDK Web Sample App</title>
 
-<!-- Material Design Lite CSS & JS -->
 <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<link rel="stylesheet" href="css/styles.css">
 <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 <script type="text/javascript" src="lib/consent.bundle.js"></script>
 <script type="text/javascript" src="lib/brd_api.mock.js"></script>
 <script type="text/javascript" src="lib/brd_api.helper.js"></script>
 
-<style>
-html, body {
-  height: 100%;
-  margin: 0;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  text-align: center;
-  padding: 20px;
-}
-
-h1 {
-  margin-bottom: 40px;
-}
-
-.label-text {
-  margin-bottom: 20px;
-  font-size: 16px;
-  color: #555;
-}
-
-.premium-switch-label {
-  display: flex;
-  align-items: center;
-  gap: 12px; /* space between text and switch */
-  margin-bottom: 24px;
-}
-.premium-switch-label span {
-  font-size: 1rem;
-}
-.premium-switch-label .mdl-switch {
-  margin: 0; /* removes extra space from switch */
-}
-
-.mdl-button {
-  font-size: 16px;
-}
-</style>
 </head>
 <body>
 
@@ -71,114 +27,9 @@ h1 {
     Press OK to Display Consent
   </button>
 </div>
-<style type="text/css">
-#consent-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9998;
-}
-</style>
-<div id="consent-container"></div>
 
-<script>
-window.onload = function() {
-  const button = document.getElementById('premiumButton');
-  const label = document.getElementById('label');
-  const premiumSwitch = document.getElementById('premiumSwitch');
-  let isPremium = false;
-
-  function updateUI() {
-    premiumSwitch.checked = isPremium;
-    label.textContent = isPremium
-      ? 'When enabled, you get premium access'
-      : 'Enable to gain premium access';
-    const wrapper = premiumSwitch.parentElement;
-    if(isPremium) {
-      wrapper.classList.add('is-checked');
-    } else {
-      wrapper.classList.remove('is-checked');
-    }
-  }
-
-  button.addEventListener('click', () => {
-    dialog.show();
-  });
-
-  // Toggle premium state with the switch
-  premiumSwitch.addEventListener('change', (e) => {
-    if (premiumSwitch.checked)
-      dialog.show();
-    else
-      BrightSDK.disable();
-  });
-
-  // Initialize UI
-  updateUI();
-
-  var dialog = ConsentModule.create("consent-container", {
-    "logo": "img/logo.png",
-    "qrCode": "",
-    "title": "BrightSDK Web Sample App",
-    "benefitText": "To support the app",
-    "acceptButton": "",
-    "declineButton": "",
-    "acceptButtonText": "Accept",
-    "declineButtonText": "Decline",
-    "backgroundColor": "#FBEFCF",
-    "accentColor": "#D36B2E",
-    "acceptTextColor": "#FFF",
-    "declineTextColor": "#9D9B9B",
-    "borderColor": "#AA99EC",
-    "outlineColor": "#9DA9E8",
-    "onShow": () => {/* callback to execute on dialog display */},
-    "onClose": () => {/* callback to execute on dialog close */},
-    "onAccept": () => { BrightSDK.enable(true); },
-    "onDecline": () => { BrightSDK.disable(); },
-  });
-
-  BrightSDK.init({
-    lang: 'en',
-    app_name: 'BrightSDK Web Sample App',
-    app_logo: 'icon.png',
-    skip_consent: true,
-    iframe: false,
-    debug: true,
-    verbose: true,
-    on_status_change: value=>{
-      isPremium = value;
-      updateUI();
-    },
-  }).then(function() {
-    if (!isPremium)
-      dialog.show();
-  });
-
-  // Upgrade DOM for dynamically inserted MDL elements
-  if (window.componentHandler) {
-    componentHandler.upgradeDom();
-  }
-
-  document.addEventListener('keydown', function(event) {
-    if (
-      event.key === 'Enter' ||
-      event.key === 'OK' ||
-      event.code === 'Enter' ||
-      event.keyCode === 13
-    ) {
-      dialog.show();
-      event.preventDefault();
-      return false;
-    }
-  });
-
-};
-</script>
+<script type="text/javascript" src="src/external-dialog.js"></script>
+<script type="text/javascript" src="src/main.js"></script>
 
 </body>
 </html>
